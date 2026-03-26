@@ -1,0 +1,9 @@
+.questionStyleAcc {
+  /* background-color: #d2b740; */
+  border-radius: 10px;
+  background-color: #48a1ca;
+  color: white;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+}

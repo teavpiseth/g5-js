@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <title>DOM Creation Example</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      function createAndAppendElement() {
+        // Create a new div element
+        const newDiv = document.createElement("div");
+        // Set the text content of the new div
+        newDiv.textContent = "This is a new div element.";
+        // Set the style of the new div
+        newDiv.style.backgroundColor = "lightgray";
+        newDiv.style.padding = "20px";
+        newDiv.style.margin = "10px 0";
+        // Append the new div to the container element
+        const container = document.getElementById("root");
+        container.appendChild(newDiv);
+      }
+      createAndAppendElement();
+    </script>
+  </body>
+</html>

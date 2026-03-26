@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello Word</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <h1 id="heading">Initial Heading</h1>
+    <p id="content" style="color: red">Initial Content</p>
+    <button onclick="updateDOM()">Update DOM</button>
+    <script>
+      function updateDOM() {
+        document.getElementById("heading").textContent = "Updated Heading";
+        document.getElementById("content").innerHTML =
+          "<em>Updated Content</em>";
+      }
+    </script>
+  </body>
+</html>
