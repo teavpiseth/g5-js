@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const todoRoute = require("./modules/todoRoute");
-const categoryRoute = require("./modules/categoryRoute");
+// const categoryRoute = require("./modules/categoryRoute");
+const categoryRoute = require("./modules/category/category.route");
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
