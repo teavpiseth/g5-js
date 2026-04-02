@@ -2,10 +2,15 @@ const {
   resError,
   handleUpdateResult,
   resSuccess,
+  handleCreateResult,
 } = require("../../common/utils/response");
 const { list } = require("./category.model");
-const { updateValidation, deleteValidation } = require("./category.validation");
-const { updateModal, deleteModal } = require("./category.model");
+const {
+  createValidation,
+  updateValidation,
+  deleteValidation,
+} = require("./category.validation");
+const { createModal, updateModal, deleteModal } = require("./category.model");
 
 const getList = async (req, res, next) => {
   try {
@@ -16,6 +21,25 @@ const getList = async (req, res, next) => {
       message: "Categories retrieved successfully",
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+const create = async (req, res, next) => {
+  try {
+    const validate = createValidation(req.body);
+    if (!validate.result) {
+      return resError(res, "Validation failed", 400, validate.errors);
+    }
+
+    const result = await createModal(req, res, next);
+
+    return handleCreateResult(res, result);
+  } catch (error) {
+    // Handle duplicate entry error (if name or slug must be unique)
+    if (error.code === "ER_DUP_ENTRY") {
+      return resError(res, "Category with this name already exists", 409);
+    }
     next(error);
   }
 };
@@ -75,6 +99,7 @@ const deleteCategory = async (req, res, next) => {
 
 module.exports = {
   getList,
+  create,
   update,
   deleteCategory,
 };

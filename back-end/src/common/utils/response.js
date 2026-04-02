@@ -170,6 +170,13 @@ const handleUpdateResult = (res, result, id) => {
   return notFound(res, `Category with ID ${id}`);
 };
 
+const handleCreateResult = (res, result, data) => {
+  if (result.affectedRows === 1) {
+    return created(res, { id: result.insertId, ...data });
+  }
+  return resError(res, "Failed to create resource", 500);
+};
+
 module.exports = {
   resSuccess,
   resError,
@@ -181,4 +188,5 @@ module.exports = {
   created,
   paginated,
   handleUpdateResult,
+  handleCreateResult,
 };

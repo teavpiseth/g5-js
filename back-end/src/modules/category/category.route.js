@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { getList, update, deleteCategory } = require("./category.ctrl");
+const { getList, create, update, deleteCategory } = require("./category.ctrl");
 
 router.get("/", getList);
+router.post("/", create);
 router.put("/:id", update);
 router.delete("/:id", deleteCategory);
 
