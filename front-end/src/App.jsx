@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import StateAsSnapshot from "./lesson/interactivity/StateAsSnapshot";
 
@@ -8,17 +8,18 @@ import QNA from "./components/QNA";
 import TodoList from "./components/TodoList";
 import TodoListApi from "./components/TodoListApi";
 import DashboardLayout from "./layout/DashboardLayout";
+import Category from "./modules/Category";
 
 function App() {
   return (
     <>
       {/* // context */}
       <BrowserRouter>
-        <nav style={{ padding: "20px", textAlign: "center" }}>
+        {/* <nav style={{ padding: "20px", textAlign: "center" }}>
           <Link to="/" style={{ margin: "0 10px" }}>
             Home
           </Link>
-        </nav>
+        </nav> */}
 
         <Routes>
           <Route path="/" element={<Homepage />} />
@@ -27,7 +28,12 @@ function App() {
           <Route path="/todo" element={<TodoList />} />
           <Route path="/todo-api" element={<TodoListApi />} />
           <Route path="/state-snapshot" element={<StateAsSnapshot />} />
-          <Route path="/dashboard" element={<DashboardLayout />} />
+          {/* dashboard/purchase */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route path="category" element={<Category />} />
+            <Route path="product" element={<>product</>} />
+          </Route>
+          <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </BrowserRouter>
     </>

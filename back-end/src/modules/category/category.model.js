@@ -3,7 +3,7 @@ const db = require("../../../db/config");
 const list = async () => {
   try {
     const [rows] = await db.pool.execute(
-      "SELECT * FROM categories ORDER BY  desc",
+      "SELECT * FROM categories ORDER BY id  desc",
     );
     console.log("Categories fetched successfully:", rows);
     return rows;
