@@ -1,6 +1,5 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import reactLogo from "./assets/react.svg";
 import StateAsSnapshot from "./lesson/interactivity/StateAsSnapshot";
 
 import { BrowserRouter } from "react-router-dom";
@@ -8,42 +7,19 @@ import Homepage from "./components/Homepage";
 import QNA from "./components/QNA";
 import TodoList from "./components/TodoList";
 import TodoListApi from "./components/TodoListApi";
+import DashboardLayout from "./layout/DashboardLayout";
+import Category from "./modules/Category";
 
 function App() {
   return (
     <>
       {/* // context */}
       <BrowserRouter>
-        <img
-          src={reactLogo}
-          style={{ margin: "auto" }}
-          className="logo react"
-          alt="React logo"
-        />
-
-        <nav style={{ padding: "20px", textAlign: "center" }}>
+        {/* <nav style={{ padding: "20px", textAlign: "center" }}>
           <Link to="/" style={{ margin: "0 10px" }}>
             Home
           </Link>
-          <Link to="/qna" style={{ margin: "0 10px" }}>
-            QNA
-          </Link>
-          <Link to="/accordion" style={{ margin: "0 10px" }}>
-            Accordion
-          </Link>
-          <Link to="/todo" style={{ margin: "0 10px" }}>
-            Todo List
-          </Link>
-          <Link to="/todo-api" style={{ margin: "0 10px" }}>
-            Todo List API
-          </Link>
-          <Link to="/state-snapshot" style={{ margin: "0 10px" }}>
-            State Snapshot
-          </Link>
-          <a href="/" style={{ margin: "0 10px" }}>
-            Home
-          </a>
-        </nav>
+        </nav> */}
 
         <Routes>
           <Route path="/" element={<Homepage />} />
@@ -52,6 +28,12 @@ function App() {
           <Route path="/todo" element={<TodoList />} />
           <Route path="/todo-api" element={<TodoListApi />} />
           <Route path="/state-snapshot" element={<StateAsSnapshot />} />
+          {/* dashboard/purchase */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route path="category" element={<Category />} />
+            <Route path="product" element={<>product</>} />
+          </Route>
+          <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </BrowserRouter>
     </>

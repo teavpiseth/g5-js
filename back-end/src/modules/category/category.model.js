@@ -2,11 +2,42 @@ const db = require("../../../db/config");
 
 const list = async () => {
   try {
-    const [rows] = await db.pool.execute("SELECT * FROM categories");
+    const [rows] = await db.pool.execute(
+      "SELECT * FROM categories ORDER BY id  desc",
+    );
+    console.log("Categories fetched successfully:", rows);
     return rows;
   } catch (error) {
-    console.log("Error fetching categories:", error);
-    // next(error);
+    throw error;
+    // console.log("Error fetching categories:", error);
+    // // next(error);
+  }
+};
+
+const createModal = async (req, res, next) => {
+  try {
+    const { name, description, parent_id, image_url, is_visible, sort_order } =
+      req.body;
+
+    const query =
+      "INSERT INTO categories (name, description, parent_id, image_url, is_visible, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())";
+    const values = [
+      name,
+      description || null,
+      parent_id || null,
+      image_url || null,
+      is_visible !== undefined ? is_visible : 1,
+      sort_order !== undefined ? sort_order : 0,
+    ];
+
+    const [result] = await db.pool.execute(query, values);
+
+    return {
+      ...result,
+    };
+  } catch (error) {
+    console.log("Error creating category:", error);
+    throw error;
   }
 };
 
@@ -57,7 +88,7 @@ const deleteModal = async (req, res, next) => {
     }
 
     // Delete the category
-    const deleteQuery = "DELETE FROM categories WHERE id = ?";
+    const deleteQuery = "update categories set is_visible = 0 where id = ?";
     const [result] = await db.pool.execute(deleteQuery, [id]);
 
     return {
@@ -73,6 +104,7 @@ const deleteModal = async (req, res, next) => {
 
 module.exports = {
   list,
+  createModal,
   updateModal,
   deleteModal,
 };
