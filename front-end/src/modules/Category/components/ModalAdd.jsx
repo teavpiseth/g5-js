@@ -1,4 +1,13 @@
-import { Form, Input, InputNumber, message, Modal, Select, Space } from "antd";
+import {
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Modal,
+  Row,
+  Select,
+} from "antd";
 import { useEffect } from "react";
 
 function ModalAdd({
@@ -8,6 +17,7 @@ function ModalAdd({
   loading,
   mode = "add",
   initialData,
+  category,
 }) {
   const [form] = Form.useForm();
 
@@ -23,6 +33,7 @@ function ModalAdd({
         is_visible: Number(initialData.is_visible ?? 1),
         sort_order: initialData.sort_order ?? 0,
       });
+
       return;
     }
 
@@ -95,28 +106,41 @@ function ModalAdd({
           <Input.TextArea rows={3} placeholder="Description" />
         </Form.Item>
 
-        <Space style={{ display: "flex", width: "100%" }}>
-          <Form.Item label="Parent ID" name="parent_id" style={{ flex: 1 }}>
-            <InputNumber
-              style={{ width: "100%" }}
-              min={1}
-              placeholder="Parent category id"
-            />
-          </Form.Item>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Parent ID" name="parent_id" style={{ flex: 1 }}>
+              <Select
+                allowClear
+                showSearch={{
+                  filterOption: (input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase()),
+                }}
+                options={category.map((cat) => ({
+                  value: cat.id,
+                  label: cat.name,
+                }))}
+                placeholder="Select parent category"
+              />
+            </Form.Item>
+          </Col>
 
-          <Form.Item
-            label="Sort Order"
-            name="sort_order"
-            style={{ flex: 1 }}
-            rules={[{ required: true, message: "Please enter sort order" }]}
-          >
-            <InputNumber
-              style={{ width: "100%" }}
-              min={0}
-              placeholder="Sort order"
-            />
-          </Form.Item>
-        </Space>
+          <Col span={12}>
+            <Form.Item
+              label="Sort Order"
+              name="sort_order"
+              style={{ flex: 1 }}
+              rules={[{ required: true, message: "Please enter sort order" }]}
+            >
+              <InputNumber
+                style={{ width: "100%" }}
+                min={0}
+                placeholder="Sort order"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item label="Image URL" name="image_url">
           <Input placeholder="https://example.com/image.jpg" />

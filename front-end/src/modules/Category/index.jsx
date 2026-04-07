@@ -22,6 +22,7 @@ function Category() {
     key: category.id,
     ...category,
   }));
+  console.log(model.add);
 
   return (
     <Space direction="vertical" size="middle" style={{ width: "100%" }}>
@@ -58,25 +59,30 @@ function Category() {
         pagination={{ pageSize: 5 }}
         scroll={{ x: 900 }}
       />
+      {model.add && (
+        <ModalAdd
+          open={model.add}
+          loading={creating}
+          category={dataSource}
+          onCancel={() => setModel((prev) => ({ ...prev, add: false }))}
+          onSubmit={createCategory}
+          mode="add"
+        />
+      )}
 
-      <ModalAdd
-        open={model.add}
-        loading={creating}
-        onCancel={() => setModel((prev) => ({ ...prev, add: false }))}
-        onSubmit={createCategory}
-        mode="add"
-      />
-
-      <ModalAdd
-        open={model.edit}
-        loading={updating}
-        initialData={model.editData}
-        onCancel={() =>
-          setModel((prev) => ({ ...prev, edit: false, editData: null }))
-        }
-        onSubmit={updateCategory}
-        mode="edit"
-      />
+      {model.edit && (
+        <ModalAdd
+          open={model.edit}
+          loading={updating}
+          initialData={model.editData}
+          category={dataSource}
+          onCancel={() =>
+            setModel((prev) => ({ ...prev, edit: false, editData: null }))
+          }
+          onSubmit={updateCategory}
+          mode="edit"
+        />
+      )}
     </Space>
   );
 }

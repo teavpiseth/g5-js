@@ -5,7 +5,6 @@ const list = async () => {
     const [rows] = await db.pool.execute(
       "SELECT * FROM categories ORDER BY id  desc",
     );
-    console.log("Categories fetched successfully:", rows);
     return rows;
   } catch (error) {
     throw error;
@@ -36,7 +35,6 @@ const createModal = async (req, res, next) => {
       ...result,
     };
   } catch (error) {
-    console.log("Error creating category:", error);
     throw error;
   }
 };
@@ -62,7 +60,7 @@ const updateModal = async (req, res, next) => {
     const [result] = await db.pool.execute(query, values);
     return result;
   } catch (error) {
-    console.log("Error updating category:", error);
+    throw error;
   }
 };
 
@@ -97,7 +95,6 @@ const deleteModal = async (req, res, next) => {
       deletedId: id,
     };
   } catch (error) {
-    console.log("Error deleting category:", error);
     throw error;
   }
 };
