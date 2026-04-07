@@ -41,7 +41,8 @@ function useCategory() {
       title: "Parent ID",
       dataIndex: "parent_id",
       key: "parent_id",
-      render: (value) => value ?? "Root",
+      render: (value) =>
+        categories.find((cat) => cat.id === value)?.name || "Null",
       width: 120,
     },
     {
