@@ -1,6 +1,7 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
+import HttpRequest from "../../service/HttpRequest";
 
 const CATEGORY_API_URL = "http://localhost:3033/api/categories";
 
@@ -105,14 +106,10 @@ function useCategory() {
     setError("");
 
     try {
-      const response = await fetch(CATEGORY_API_URL);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories");
+      const response = await HttpRequest.get(CATEGORY_API_URL);
+      if (response.data) {
+        setCategories(Array.isArray(response.data) ? response.data : []);
       }
-
-      const result = await response.json();
-      setCategories(Array.isArray(result.data) ? result.data : []);
     } catch (fetchError) {
       setError(fetchError.message || "Unable to load categories");
       setCategories([]);
@@ -130,20 +127,7 @@ function useCategory() {
     async (payload) => {
       setCreating(true);
       try {
-        const response = await fetch(CATEGORY_API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          throw new Error(result.message || "Failed to create category");
-        }
-
+        await HttpRequest.post(CATEGORY_API_URL, payload);
         await fetchCategories();
         setModel((prev) => ({ ...prev, add: false }));
         return { success: true };
@@ -168,29 +152,10 @@ function useCategory() {
       setUpdating(true);
 
       try {
-        const response = await fetch(
+        await HttpRequest.put(
           `${CATEGORY_API_URL}/${model.editData.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ...payload,
-              parent_id:
-                payload.parent_id === null || payload.parent_id === undefined
-                  ? null
-                  : String(payload.parent_id),
-            }),
-          },
+          payload,
         );
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          throw new Error(result.message || "Failed to update category");
-        }
-
         await fetchCategories();
         setModel((prev) => ({ ...prev, edit: false, editData: null }));
         return { success: true };
@@ -210,15 +175,7 @@ function useCategory() {
     async (id) => {
       setDeletingId(id);
       try {
-        const response = await fetch(`${CATEGORY_API_URL}/${id}`, {
-          method: "DELETE",
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          throw new Error(result.message || "Failed to delete category");
-        }
+        await HttpRequest.delete(`${CATEGORY_API_URL}/${id}`);
 
         await fetchCategories();
         return { success: true };
