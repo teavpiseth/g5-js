@@ -22,7 +22,6 @@ function Category() {
     key: category.id,
     ...category,
   }));
-  console.log(model.add);
 
   return (
     <Space direction="vertical" size="middle" style={{ width: "100%" }}>

@@ -6,7 +6,10 @@ const updateValidation = (body) => {
     id: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
     name: Joi.string().required(),
     description: Joi.string().required(),
-    parent_id: Joi.string().allow(null),
+    parent_id: Joi.alternatives()
+      .try(Joi.string(), Joi.number())
+      .required()
+      .allow(null),
     image_url: Joi.string().required(),
     is_visible: Joi.number().required(),
     sort_order: Joi.number().required(),

@@ -9,6 +9,7 @@ import TodoList from "./components/TodoList";
 import TodoListApi from "./components/TodoListApi";
 import DashboardLayout from "./layout/DashboardLayout";
 import Category from "./modules/Category";
+import "./service/AxiosInterceptor";
 
 function App() {
   return (
