@@ -7,8 +7,217 @@ import {
   Modal,
   Row,
   Select,
+  TreeSelect,
 } from "antd";
 import { useEffect } from "react";
+
+const mockCategory = [
+  {
+    id: 14,
+    name: "pants 02",
+    slug: null,
+    description: "N/A",
+    parent_id: 1,
+    image_url: "N/A",
+    is_visible: 0,
+    sort_order: 0,
+    created_at: "2026-04-07T14:52:01.000Z",
+    updated_at: "2026-04-07T14:57:46.000Z",
+  },
+  {
+    id: 13,
+    name: "pants",
+    slug: null,
+    description: "N/A",
+    parent_id: 1,
+    image_url:
+      "https://media.wired.com/photos/611c5312798f0e2c853b702f/4:3/w_1375,h_1031,c_limit/Gear-Cargo-Pants-are-Back-1302952122.jpg",
+    is_visible: 1,
+    sort_order: 0,
+    created_at: "2026-04-06T14:33:42.000Z",
+    updated_at: "2026-04-06T14:33:42.000Z",
+  },
+  {
+    id: 12,
+    name: "T-shirt",
+    slug: null,
+    description: "N/A",
+    parent_id: 1,
+    image_url:
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 1,
+    created_at: "2026-04-01T14:32:38.000Z",
+    updated_at: "2026-04-06T15:01:52.000Z",
+  },
+  {
+    id: 11,
+    name: "TV",
+    slug: null,
+    description: "All TV items including",
+    parent_id: null,
+    image_url:
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 1,
+    created_at: "2026-04-01T14:17:49.000Z",
+    updated_at: "2026-04-01T14:17:49.000Z",
+  },
+  {
+    id: 10,
+    name: "Running Shoes",
+    slug: null,
+    description: "Professional running and athletic footwear",
+    parent_id: 4,
+    image_url:
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 1,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-24T14:23:36.000Z",
+  },
+  {
+    id: 9,
+    name: "Laptops",
+    slug: null,
+    description: "Computers and laptops for work and gaming",
+    parent_id: 2,
+    image_url:
+      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 2,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-24T14:23:36.000Z",
+  },
+  {
+    id: 8,
+    name: "Smartphones",
+    slug: null,
+    description: "Latest smartphones and mobile devices",
+    parent_id: 2,
+    image_url:
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 1,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-24T14:23:36.000Z",
+  },
+  {
+    id: 5,
+    name: "T-Shirts",
+    slug: null,
+    description: "Casual and formal t-shirts for all occasions",
+    parent_id: 1,
+    image_url:
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 1,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-24T14:23:36.000Z",
+  },
+  {
+    id: 4,
+    name: "Sports & Fitness",
+    slug: null,
+    description: "Sports equipment, fitness gear, and athletic wear",
+    parent_id: null,
+    image_url:
+      "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 4,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-24T14:23:36.000Z",
+  },
+  {
+    id: 3,
+    name: "Home & Garden",
+    slug: null,
+    description: "Home improvement, furniture, and garden supplies",
+    parent_id: null,
+    image_url:
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 3,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-24T14:23:36.000Z",
+  },
+  {
+    id: 2,
+    name: "Electronics",
+    slug: null,
+    description: "Electronic devices, gadgets and tech accessories",
+    parent_id: null,
+    image_url:
+      "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 2,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-24T14:23:36.000Z",
+  },
+  {
+    id: 1,
+    name: "Clothing 2",
+    slug: null,
+    description:
+      "All clothing items including shirts, pants, dresses and accessories 1",
+    parent_id: null,
+    image_url:
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=300&fit=crop",
+    is_visible: 1,
+    sort_order: 1,
+    created_at: "2026-03-24T14:23:36.000Z",
+    updated_at: "2026-03-31T14:55:13.000Z",
+  },
+];
+
+const dataForUI = [
+  {
+    value: "parent 1",
+    title: "parent 1",
+    children: [
+      {
+        value: "parent 1-0",
+        title: "parent 1-0",
+        children: [
+          {
+            value: "leaf1",
+            title: "leaf1",
+          },
+          {
+            value: "leaf2",
+            title: "leaf2",
+          },
+          {
+            value: "leaf3",
+            title: "leaf3",
+          },
+          {
+            value: "leaf4",
+            title: "leaf4",
+          },
+          {
+            value: "leaf5",
+            title: "leaf5",
+          },
+          {
+            value: "leaf6",
+            title: "leaf6",
+          },
+        ],
+      },
+      {
+        value: "parent 1-1",
+        title: "parent 1-1",
+        children: [
+          {
+            value: "leaf11",
+            title: <b style={{ color: "#08c" }}>leaf11</b>,
+          },
+        ],
+      },
+    ],
+  },
+];
 
 function ModalAdd({
   open,
@@ -82,6 +291,21 @@ function ModalAdd({
     );
   };
 
+  const getTreeData = (categories, parentId = null) => {
+    // [] = 10; filter 5
+    return categories
+      .filter((obj) => obj.parent_id === parentId)
+      .map((obj) => {
+        return {
+          value: obj.id,
+          title: obj.name,
+          children: getTreeData(categories, obj.id),
+        };
+      });
+  };
+
+  const treeData = getTreeData(category);
+
   return (
     <Modal
       title={mode === "edit" ? "Edit Category" : "Add Category"}
@@ -109,7 +333,7 @@ function ModalAdd({
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item label="Parent ID" name="parent_id" style={{ flex: 1 }}>
-              <Select
+              {/* <Select
                 allowClear
                 showSearch={{
                   filterOption: (input, option) =>
@@ -122,6 +346,18 @@ function ModalAdd({
                   label: cat.name,
                 }))}
                 placeholder="Select parent category"
+              /> */}
+              <TreeSelect
+                showSearch
+                style={{ width: "100%" }}
+                styles={{
+                  popup: {
+                    root: { maxHeight: 400, overflow: "auto" },
+                  },
+                }}
+                placeholder="Please select"
+                allowClear
+                treeData={treeData}
               />
             </Form.Item>
           </Col>

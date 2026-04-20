@@ -1,9 +1,10 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
+import { apiUrl } from "../../helper/const";
 import HttpRequest from "../../service/HttpRequest";
 
-const CATEGORY_API_URL = "http://localhost:3033/api/categories";
+const CATEGORY_API_URL = `${apiUrl}api/categories`;
 
 function useCategory() {
   const [categories, setCategories] = useState([]);

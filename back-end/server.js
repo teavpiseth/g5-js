@@ -17,7 +17,7 @@ app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
 
-const PORT = 3033;
+const PORT = 3034;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
 });
