@@ -9,6 +9,7 @@ import TodoList from "./components/TodoList";
 import TodoListApi from "./components/TodoListApi";
 import DashboardLayout from "./layout/DashboardLayout";
 import Category from "./modules/Category";
+import Product from "./modules/Product";
 import "./service/AxiosInterceptor";
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
           {/* dashboard/purchase */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="category" element={<Category />} />
-            <Route path="product" element={<>product</>} />
+            <Route path="product" element={<Product />} />
           </Route>
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>

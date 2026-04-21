@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiUrl } from "../helper/const";
 import "./Homepage.css";
 
 const Homepage = () => {
@@ -31,7 +32,7 @@ const Homepage = () => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:3033/api/categories");
+        const response = await fetch(`${apiUrl}api/categories`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
