@@ -4,7 +4,7 @@ import ModalAdd from "./components/ModalAdd";
 import useProduct from "./useProduct";
 
 function Product() {
-  const { columns, loading, model, setModel } = useProduct();
+  const { columns, loading, model, setModel, handleOnSubmit } = useProduct();
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
@@ -33,7 +33,7 @@ function Product() {
           loading={loading}
           category={[]}
           onCancel={() => setModel((prev) => ({ ...prev, add: false }))}
-          onSubmit={() => {}}
+          onSubmit={handleOnSubmit}
           mode="add"
         />
       )}

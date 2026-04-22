@@ -1,6 +1,19 @@
-const { resError, handleCreateResult } = require("../../common/utils/response");
+const {
+  resError,
+  handleCreateResult,
+  resSuccess,
+} = require("../../common/utils/response");
 const { createValidation } = require("./product.validation");
-const { createModal } = require("./product.model");
+const { createModal, list } = require("./product.model");
+
+const getList = async (req, res, next) => {
+  try {
+    const result = await list();
+    return resSuccess(res, result, "Products retrieved successfully");
+  } catch (error) {
+    next(error);
+  }
+};
 
 const create = async (req, res, next) => {
   try {
@@ -34,5 +47,6 @@ const create = async (req, res, next) => {
 };
 
 module.exports = {
+  getList,
   create,
 };

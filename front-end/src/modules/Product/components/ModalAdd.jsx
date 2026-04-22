@@ -1,5 +1,15 @@
-import { Form, Input, InputNumber, message, Modal, Select } from "antd";
-import { useEffect } from "react";
+import {
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Modal,
+  Select,
+  TreeSelect,
+} from "antd";
+import { useEffect, useState } from "react";
+import { apiUrl } from "../../../helper/const";
+import HttpRequest from "../../../service/HttpRequest";
 
 function ModalAdd({
   open,
@@ -8,9 +18,9 @@ function ModalAdd({
   loading,
   mode = "add",
   initialData,
-  category,
 }) {
   const [form] = Form.useForm();
+  const [category, setCategory] = useState([]);
 
   useEffect(() => {
     if (!open) return;
@@ -61,6 +71,8 @@ function ModalAdd({
 
     const result = await onSubmit(payload);
 
+    console.log("Submit result:", result);
+
     if (result?.success) {
       message.success(
         mode === "edit"
@@ -78,6 +90,38 @@ function ModalAdd({
           : "Failed to create product"),
     );
   };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const category = await HttpRequest.get(`${apiUrl}api/categories`);
+        if (category?.success) {
+          setCategory(category.data || []);
+        }
+      } catch (error) {
+        message.error("Failed to fetch categories");
+      }
+    };
+
+    if (category.length === 0) {
+      fetchCategories();
+    }
+  }, []);
+
+  const getTreeData = (categories, parentId = null) => {
+    // [] = 10; filter 5
+    return categories
+      .filter((obj) => obj.parent_id === parentId)
+      .map((obj) => {
+        return {
+          value: obj.id,
+          title: obj.name,
+          children: getTreeData(categories, obj.id),
+        };
+      });
+  };
+
+  const treeData = getTreeData(category);
 
   return (
     <Modal
@@ -125,15 +169,17 @@ function ModalAdd({
           name="category_id"
           rules={[{ required: true, message: "Please select category" }]}
         >
-          <Select
-            allowClear
+          <TreeSelect
             showSearch
-            optionFilterProp="label"
-            options={(category || []).map((cat) => ({
-              value: cat.id,
-              label: cat.name,
-            }))}
-            placeholder="Select category"
+            style={{ width: "100%" }}
+            styles={{
+              popup: {
+                root: { maxHeight: 400, overflow: "auto" },
+              },
+            }}
+            placeholder="Please select"
+            allowClear
+            treeData={treeData}
           />
         </Form.Item>
 

@@ -1,5 +1,16 @@
 const db = require("../../../db/config");
 
+const list = async () => {
+  try {
+    const [rows] = await db.pool.execute(
+      "SELECT p.*, p.base_price AS price, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY p.id DESC",
+    );
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const createModal = async (req, res, next) => {
   try {
     const {
@@ -36,5 +47,6 @@ const createModal = async (req, res, next) => {
 };
 
 module.exports = {
+  list,
   createModal,
 };
