@@ -1,12 +1,14 @@
 import { Button, Popconfirm, Space } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import { apiUrl } from "../../helper/const";
-import HttpRequest from "../../service/HttpRequest";
+import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../../../helper/const";
+import HttpRequest from "../../../service/HttpRequest";
 
 const PRODUCT_API_URL = `${apiUrl}api/products`;
 
 const useProduct = () => {
+  const navigate = useNavigate();
   const [productList, setProductList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
@@ -67,6 +69,18 @@ const useProduct = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
+    },
+    {
+      title: "Variant",
+      dataIndex: "variant",
+      key: "variant",
+      render: (_, record) => {
+        return (
+          <Button onClick={() => navigate("variants/" + record.id)}>
+            Update Variant
+          </Button>
+        );
+      },
     },
     {
       title: "Action",

@@ -8,8 +8,9 @@ import QNA from "./components/QNA";
 import TodoList from "./components/TodoList";
 import TodoListApi from "./components/TodoListApi";
 import DashboardLayout from "./layout/DashboardLayout";
-import Category from "./modules/Category";
-import Product from "./modules/Product";
+import Category from "./modules/dashboard/Category";
+import Product from "./modules/dashboard/Product";
+import ProductVariant from "./modules/dashboard/Product/ProductVariant";
 import "./service/AxiosInterceptor";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="category" element={<Category />} />
             <Route path="product" element={<Product />} />
+            <Route path="product/variants/:id" element={<ProductVariant />} />
           </Route>
           <Route path="/:categoryId" element={<div>Category ID:</div>} />
           <Route path="*" element={<div>404 Not Found</div>} />
