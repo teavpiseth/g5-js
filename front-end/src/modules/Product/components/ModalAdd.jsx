@@ -71,8 +71,6 @@ function ModalAdd({
 
     const result = await onSubmit(payload);
 
-    console.log("Submit result:", result);
-
     if (result?.success) {
       message.success(
         mode === "edit"

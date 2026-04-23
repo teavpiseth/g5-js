@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { apiUrl } from "../helper/const";
 import "./Homepage.css";
 
@@ -7,6 +8,7 @@ const Homepage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Slider images - you can replace these with your own
   const sliderImages = [
@@ -144,7 +146,11 @@ const Homepage = () => {
           {!loading && !error && (
             <div className="categories-grid">
               {topLevelCategories.map((category) => (
-                <div key={category.id} className="category-card">
+                <div
+                  onClick={() => navigate(`/${category.id}`)}
+                  key={category.id}
+                  className="category-card"
+                >
                   <div className="category-image">
                     <img
                       src={category.image_url}

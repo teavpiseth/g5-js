@@ -3,8 +3,17 @@ const {
   handleCreateResult,
   resSuccess,
 } = require("../../common/utils/response");
-const { createValidation } = require("./product.validation");
-const { createModal, list } = require("./product.model");
+const {
+  createValidation,
+  updateValidation,
+  deleteValidation,
+} = require("./product.validation");
+const {
+  createModal,
+  list,
+  updateModal,
+  deleteModal,
+} = require("./product.model");
 
 const getList = async (req, res, next) => {
   try {
@@ -46,7 +55,68 @@ const create = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const validate = updateValidation({ id, ...req.body });
+    if (!validate.result) {
+      return resError(res, "Validation failed", 400, validate.errors);
+    }
+
+    const result = await updateModal(req, res, next);
+
+    if (result.affectedRows === 0) {
+      return resError(res, "Product not found", 404);
+    }
+
+    return resSuccess(
+      res,
+      { id: Number(id), ...req.body },
+      "Product updated successfully",
+    );
+  } catch (error) {
+    if (error.code === "ER_DUP_ENTRY") {
+      return resError(res, "Product with this slug already exists", 409);
+    }
+
+    if (error.code === "ER_NO_REFERENCED_ROW_2") {
+      return resError(res, "Selected category does not exist", 400);
+    }
+
+    next(error);
+  }
+};
+
+const deleteProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const validate = deleteValidation({ id });
+    if (!validate.result) {
+      return resError(res, "Validation failed", 400, validate.errors);
+    }
+
+    const result = await deleteModal(req, res, next);
+
+    if (result.notFound || result.affectedRows === 0) {
+      return resError(res, "Product not found", 404);
+    }
+
+    return resSuccess(
+      res,
+      {
+        deletedId: Number(id),
+        productName: result.productName,
+      },
+      `Product '${result.productName}' deleted successfully`,
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getList,
   create,
+  update,
+  deleteProduct,
 };

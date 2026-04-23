@@ -46,7 +46,67 @@ const createModal = async (req, res, next) => {
   }
 };
 
+const updateModal = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      slug,
+      description,
+      category_id,
+      brand,
+      base_price,
+      is_active,
+    } = req.body;
+
+    const query =
+      "UPDATE products SET name = ?, slug = ?, description = ?, category_id = ?, brand = ?, base_price = ?, is_active = ?, updated_at = NOW() WHERE id = ?";
+
+    const values = [
+      name,
+      slug,
+      description || null,
+      category_id || null,
+      brand || null,
+      base_price ?? null,
+      is_active !== undefined ? is_active : 1,
+      id,
+    ];
+
+    const [result] = await db.pool.execute(query, values);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteModal = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const checkQuery = "SELECT id, name FROM products WHERE id = ?";
+    const [existingProduct] = await db.pool.execute(checkQuery, [id]);
+
+    if (existingProduct.length === 0) {
+      return { notFound: true };
+    }
+
+    const deleteQuery = "DELETE FROM products WHERE id = ?";
+    const [result] = await db.pool.execute(deleteQuery, [id]);
+
+    return {
+      ...result,
+      deletedId: Number(id),
+      productName: existingProduct[0].name,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   list,
   createModal,
+  updateModal,
+  deleteModal,
 };

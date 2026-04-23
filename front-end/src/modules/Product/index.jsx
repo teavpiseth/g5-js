@@ -4,7 +4,8 @@ import ModalAdd from "./components/ModalAdd";
 import useProduct from "./useProduct";
 
 function Product() {
-  const { columns, loading, model, setModel, handleOnSubmit } = useProduct();
+  const { columns, loading, model, productList, setModel, handleOnSubmit } =
+    useProduct();
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
@@ -21,8 +22,9 @@ function Product() {
         </Button>
       </div>
       <Table
+        rowKey={"id"}
         columns={columns}
-        dataSource={[]}
+        dataSource={productList}
         loading={loading}
         pagination={{ pageSize: 5 }}
         scroll={{ x: 900 }}
@@ -37,6 +39,18 @@ function Product() {
           mode="add"
         />
       )}
+
+      <ModalAdd
+        open={model.edit}
+        loading={loading}
+        initialData={model.editData}
+        category={[]}
+        onCancel={() =>
+          setModel((prev) => ({ ...prev, edit: false, editData: null }))
+        }
+        onSubmit={handleOnSubmit}
+        mode="edit"
+      />
     </div>
   );
 }

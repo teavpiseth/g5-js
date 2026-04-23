@@ -35,6 +35,7 @@ function App() {
             <Route path="category" element={<Category />} />
             <Route path="product" element={<Product />} />
           </Route>
+          <Route path="/:categoryId" element={<div>Category ID:</div>} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </BrowserRouter>
