@@ -37,6 +37,16 @@ const DashboardLayout = () => {
                 label: "Product",
               },
               {
+                key: "user",
+                icon: <UserOutlined />,
+                label: "User",
+              },
+              {
+                key: "customer",
+                icon: <UserOutlined />,
+                label: "Customer",
+              },
+              {
                 key: "3",
                 icon: <UploadOutlined />,
                 label: "Purchase",
