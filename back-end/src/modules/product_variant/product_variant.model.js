@@ -62,4 +62,39 @@ const deleteModal = async (req) => {
   return result;
 };
 
-module.exports = { list, createModal, updateModal, deleteModal };
+const createImageModal = async ({
+  variantId,
+  imageUrl,
+  altText,
+  isPrimary,
+  displayOrder,
+}) => {
+  const [result] = await db.pool.execute(
+    "INSERT INTO product_variant_images (variant_id, image_url, alt_text, is_primary, display_order, created_at) VALUES (?, ?, ?, ?, ?, NOW())",
+    [
+      variantId,
+      imageUrl,
+      altText || null,
+      isPrimary ? 1 : 0,
+      displayOrder ?? 0,
+    ],
+  );
+  return result;
+};
+
+const listImages = async (variantId) => {
+  const [rows] = await db.pool.execute(
+    "SELECT * FROM product_variant_images WHERE variant_id = ? ORDER BY is_primary DESC, display_order ASC, id DESC",
+    [variantId],
+  );
+  return rows;
+};
+
+module.exports = {
+  list,
+  createModal,
+  updateModal,
+  deleteModal,
+  createImageModal,
+  listImages,
+};
