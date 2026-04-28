@@ -1,14 +1,4 @@
-import { PlusOutlined } from "@ant-design/icons";
-import {
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Row,
-  Upload,
-} from "antd";
+import { Col, Form, Input, InputNumber, message, Modal, Row } from "antd";
 import { useEffect, useState } from "react";
 
 function ModalAdd({
@@ -144,7 +134,7 @@ function ModalAdd({
           </Col>
         </Row>
 
-        <Form.Item
+        {/* <Form.Item
           label="Variant Images"
           name="images"
           required
@@ -176,7 +166,7 @@ function ModalAdd({
               <div style={{ marginTop: 8 }}>Upload</div>
             </div>
           </Upload>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );

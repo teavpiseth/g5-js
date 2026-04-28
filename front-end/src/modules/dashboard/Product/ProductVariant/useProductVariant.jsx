@@ -13,11 +13,14 @@ function useProductVariant(productId) {
   const [error, setError] = useState("");
   const [creating, setCreating] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const [loadingImages, setLoadingImages] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [model, setModel] = useState({
     add: false,
     edit: false,
     editData: null,
+    isUploadImages: false,
   });
 
   const columns = [
@@ -64,6 +67,25 @@ function useProductVariant(productId) {
       dataIndex: "price",
       key: "price",
       render: (v) => `$${Number(v).toFixed(2)}`,
+    },
+    {
+      title: "Image",
+      key: "images",
+      render: (_, record) => {
+        return (
+          <Button
+            onClick={() =>
+              setModel((prev) => ({
+                ...prev,
+                editData: record,
+                isUploadImages: true,
+              }))
+            }
+          >
+            Manage
+          </Button>
+        );
+      },
     },
     {
       title: "Action",
@@ -179,6 +201,76 @@ function useProductVariant(productId) {
     [productId, fetchVariants, model.editData?.id],
   );
 
+  const uploadVariantImages = useCallback(
+    async (images = []) => {
+      if (!model.editData?.id) {
+        return { success: false, message: "Variant id is missing" };
+      }
+
+      if (!Array.isArray(images) || images.length === 0) {
+        return { success: false, message: "Please upload at least one image" };
+      }
+
+      setUploadingImages(true);
+      try {
+        const formData = new FormData();
+        images.forEach((file) => {
+          formData.append("images", file);
+        });
+
+        await HttpRequest.post(
+          `${variantApiUrl(productId)}/${model.editData.id}/images`,
+          formData,
+          { "Content-Type": "multipart/form-data" },
+        );
+
+        await fetchVariants();
+        setModel((prev) => ({
+          ...prev,
+          isUploadImages: false,
+          editData: null,
+        }));
+        return { success: true };
+      } catch (err) {
+        return {
+          success: false,
+          message: err.message || "Unable to upload variant images",
+        };
+      } finally {
+        setUploadingImages(false);
+      }
+    },
+    [productId, fetchVariants, model.editData?.id],
+  );
+
+  const getVariantImages = useCallback(
+    async (variantId) => {
+      if (!variantId) {
+        return { success: false, message: "Variant id is missing", data: [] };
+      }
+
+      setLoadingImages(true);
+      try {
+        const response = await HttpRequest.get(
+          `${variantApiUrl(productId)}/${variantId}/images`,
+        );
+        return {
+          success: true,
+          data: Array.isArray(response?.data) ? response.data : [],
+        };
+      } catch (err) {
+        return {
+          success: false,
+          message: err.message || "Unable to load variant images",
+          data: [],
+        };
+      } finally {
+        setLoadingImages(false);
+      }
+    },
+    [productId],
+  );
+
   const handleDelete = useCallback(
     async (id) => {
       setDeletingId(id);
@@ -201,6 +293,8 @@ function useProductVariant(productId) {
     loading,
     creating,
     updating,
+    uploadingImages,
+    loadingImages,
     error,
     columns,
     refetch: fetchVariants,
@@ -208,6 +302,8 @@ function useProductVariant(productId) {
     setModel,
     createVariant,
     updateVariant,
+    uploadVariantImages,
+    getVariantImages,
     handleDelete,
     deletingId,
   };

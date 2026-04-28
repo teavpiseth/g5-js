@@ -2,6 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Alert, Button, Space, Table, Typography } from "antd";
 import { useParams } from "react-router-dom";
 import ModalAdd from "./components/ModalAdd";
+import ModalUploadImage from "./components/ModalUploadImage";
 import useProductVariant from "./useProductVariant";
 
 function ProductVariant() {
@@ -12,6 +13,8 @@ function ProductVariant() {
     loading,
     creating,
     updating,
+    uploadingImages,
+    loadingImages,
     error,
     columns,
     refetch,
@@ -19,6 +22,8 @@ function ProductVariant() {
     setModel,
     createVariant,
     updateVariant,
+    uploadVariantImages,
+    getVariantImages,
   } = useProductVariant(productId);
 
   const dataSource = variants.map((v) => ({ key: v.id, ...v }));
@@ -83,6 +88,24 @@ function ProductVariant() {
           }
           onSubmit={updateVariant}
           mode="edit"
+        />
+      )}
+
+      {model.isUploadImages && (
+        <ModalUploadImage
+          open={model.isUploadImages}
+          loading={uploadingImages}
+          variant={model.editData}
+          onGetExistingImages={getVariantImages}
+          loadingImages={loadingImages}
+          onCancel={() =>
+            setModel((prev) => ({
+              ...prev,
+              isUploadImages: false,
+              editData: null,
+            }))
+          }
+          onSubmit={uploadVariantImages}
         />
       )}
     </Space>

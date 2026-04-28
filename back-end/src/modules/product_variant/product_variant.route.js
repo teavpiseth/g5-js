@@ -15,6 +15,6 @@ router.post("/", create);
 router.put("/:id", update);
 router.delete("/:id", deleteVariant);
 router.get("/:id/images", getImages);
-router.post("/:id/images", upload.array("images", 10), uploadImages);
+router.post("/:id/images", upload.array("images", 10), uploadImages); // becareful append name "images" must match with formData key in front-end
 
 module.exports = router;
