@@ -117,10 +117,28 @@ function useProductVariant(productId) {
   }, [fetchVariants]);
 
   const createVariant = useCallback(
-    async (payload) => {
+    async (payload, images = []) => {
       setCreating(true);
       try {
-        await HttpRequest.post(variantApiUrl(productId), payload);
+        const created = await HttpRequest.post(
+          variantApiUrl(productId),
+          payload,
+        );
+        const variantId = created?.data?.id;
+
+        if (variantId && Array.isArray(images) && images.length > 0) {
+          const formData = new FormData();
+          images.forEach((file) => {
+            formData.append("images", file);
+          });
+
+          await HttpRequest.post(
+            `${variantApiUrl(productId)}/${variantId}/images`,
+            formData,
+            { "Content-Type": "multipart/form-data" },
+          );
+        }
+
         await fetchVariants();
         setModel((prev) => ({ ...prev, add: false }));
         return { success: true };
