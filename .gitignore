@@ -1,6 +1,8 @@
 # Node.js dependencies
 back-end/node_modules/
 front-end/node_modules/
+front-end/dist/
+**/dist/
 
 # macOS system files
 **/.DS_Store
