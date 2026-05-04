@@ -9,6 +9,7 @@ const productRoute = require("./src/modules/product/product.route");
 const productVariantRoute = require("./src/modules/product_variant/product_variant.route");
 const userRoute = require("./src/modules/user/user.route");
 const customerRoute = require("./src/modules/customer/customer.route");
+const authRoute = require("./src/modules/auth/auth.route");
 const upload = require("./src/middleware/uploadFile");
 
 // Middleware to parse JSON request bodies
@@ -22,6 +23,7 @@ app.use("/api/products", productRoute);
 app.use("/api/products/:product_id/variants", productVariantRoute);
 app.use("/api/users", userRoute);
 app.use("/api/customers", customerRoute);
+app.use("/api/auth", authRoute);
 
 // Handle 404 for undefined routes
 app.use((req, res) => {

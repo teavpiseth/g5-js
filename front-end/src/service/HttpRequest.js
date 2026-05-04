@@ -1,12 +1,15 @@
 import axios from "axios";
+import { getDashboardAccessToken } from "../modules/dashboard/auth";
 class HttpRequest {
   async _sendRequest({ method, url, payload, extraHeaders, extraConfig }) {
     try {
+      const accessToken = getDashboardAccessToken();
       const options = {
         method,
         url,
         data: payload,
         headers: {
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
           ...extraHeaders,
         },
         ...extraConfig,

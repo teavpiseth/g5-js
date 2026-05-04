@@ -97,7 +97,13 @@ const DashboardLayout = () => {
                 }}
               />
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span>{dashboardUser?.email || "Dashboard User"}</span>
+                <span>
+                  {dashboardUser?.user?.username ||
+                    dashboardUser?.username ||
+                    dashboardUser?.user?.email ||
+                    dashboardUser?.email ||
+                    "Dashboard User"}
+                </span>
                 <Button onClick={handleLogout}>Logout</Button>
               </div>
             </div>

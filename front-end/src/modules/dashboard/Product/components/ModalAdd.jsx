@@ -97,7 +97,7 @@ function ModalAdd({
           setCategory(category.data || []);
         }
       } catch (error) {
-        message.error("Failed to fetch categories");
+        message.error(error.message || "Failed to load categories");
       }
     };
 

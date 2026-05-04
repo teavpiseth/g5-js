@@ -9,6 +9,9 @@ const {
   getImages,
 } = require("./product_variant.ctrl");
 const upload = require("../../middleware/uploadFile");
+const authMiddleware = require("../../middleware/authMiddleware");
+
+router.use(authMiddleware);
 
 router.get("/", getList);
 router.post("/", create);

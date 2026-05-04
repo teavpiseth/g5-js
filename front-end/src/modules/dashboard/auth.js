@@ -15,18 +15,26 @@ export function getDashboardAuth() {
 }
 
 export function isDashboardAuthenticated() {
-  console.log("Checking dashboard authentication:", getDashboardAuth());
-  return Boolean(getDashboardAuth()?.email);
+  return Boolean(getDashboardAuth()?.accessToken);
 }
 
 export function setDashboardAuth(payload) {
+  const user = payload?.user || {};
   localStorage.setItem(
     DASHBOARD_AUTH_KEY,
     JSON.stringify({
-      ...payload,
+      user,
+      accessToken: payload?.accessToken || "",
+      refreshToken: payload?.refreshToken || "",
+      email: user?.email || payload?.email || "",
+      username: user?.username || payload?.username || "",
       loginAt: new Date().toISOString(),
     }),
   );
+}
+
+export function getDashboardAccessToken() {
+  return getDashboardAuth()?.accessToken || "";
 }
 
 export function clearDashboardAuth() {
