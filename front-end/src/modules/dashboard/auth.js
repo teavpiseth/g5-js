@@ -1,4 +1,4 @@
-const DASHBOARD_AUTH_KEY = "dashboard_auth";
+export const DASHBOARD_AUTH_KEY = "dashboard_auth";
 
 export function getDashboardAuth() {
   try {

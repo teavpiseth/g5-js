@@ -16,6 +16,23 @@ const findUserByEmail = async (email) => {
   }
 };
 
+const findUserById = async (id) => {
+  try {
+    const query =
+      "SELECT id, username, email, is_active FROM users WHERE id = ? LIMIT 1";
+    const [rows] = await db.pool.execute(query, [id]);
+
+    if (!rows.length) {
+      return null;
+    }
+
+    return rows[0];
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   findUserByEmail,
+  findUserById,
 };

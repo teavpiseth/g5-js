@@ -26,6 +26,7 @@ function useUser() {
 
     try {
       const response = await HttpRequest.get(USER_API_URL);
+      console.log("user----", response);
       if (response.data) {
         setUsers(Array.isArray(response.data) ? response.data : []);
       }
