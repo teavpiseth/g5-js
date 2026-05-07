@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const path = require("path");
+require("dotenv").config();
 const todoRoute = require("./src/modules/todoRoute");
 // const categoryRoute = require("./modules/categoryRoute");
 const categoryRoute = require("./src/modules/category/category.route");

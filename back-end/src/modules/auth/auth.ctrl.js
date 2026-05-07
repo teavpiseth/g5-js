@@ -4,17 +4,16 @@ const { resError, resSuccess } = require("../../common/utils/response");
 const { loginValidation } = require("./auth.validation");
 const { findUserByEmail, findUserById } = require("./auth.model");
 
-const ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_SECRET || "g5_access_secret";
-const REFRESH_TOKEN_SECRET =
-  process.env.JWT_REFRESH_SECRET || "g5_refresh_secret";
-const ACCESS_TOKEN_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || "10s"; // revoke, token
+const ACCESS_TOKEN_SECRET = process.env.JWT_SECRET_KEY;
+const REFRESH_TOKEN_SECRET = process.env.JWT_SECRET_KEY;
+const ACCESS_TOKEN_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN; // revoke, token
 
 // stateless
 //- stole token (use forever)
 //+ limit token lifetime (5s, 15m, 1h)
 //+ check refresh token
 
-const REFRESH_TOKEN_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "7d";
+const REFRESH_TOKEN_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN; // revoke, token
 
 const login = async (req, res, next) => {
   try {
