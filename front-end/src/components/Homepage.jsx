@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { apiUrl } from "../helper/const";
 import "./Homepage.css";
 
@@ -34,7 +34,7 @@ const Homepage = () => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${apiUrl}api/categories`);
+        const response = await fetch(`${apiUrl}api/categories/web`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
@@ -147,7 +147,7 @@ const Homepage = () => {
             <div className="categories-grid">
               {topLevelCategories.map((category) => (
                 <div
-                  onClick={() => navigate(`/${category.id}`)}
+                  onClick={() => navigate(`/category/${category.id}`)}
                   key={category.id}
                   className="category-card"
                 >

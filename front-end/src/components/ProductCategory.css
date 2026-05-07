@@ -1,0 +1,139 @@
+.product-category-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 32px 0 48px;
+}
+
+.pc-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.pc-breadcrumb {
+  margin-bottom: 18px;
+  font-size: 0.95rem;
+}
+
+.pc-breadcrumb a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.pc-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.pc-separator {
+  margin: 0 8px;
+  color: #6b7280;
+}
+
+.pc-hero {
+  display: grid;
+  grid-template-columns: minmax(260px, 380px) 1fr;
+  gap: 22px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+.pc-hero img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.pc-hero h1 {
+  margin: 6px 0 8px;
+  color: #111827;
+}
+
+.pc-hero p {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.pc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin: 16px 0 28px;
+}
+
+.pc-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.pc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.09);
+}
+
+.pc-card.active {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+}
+
+.pc-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.pc-card h3 {
+  margin: 12px 14px 6px;
+  color: #111827;
+}
+
+.pc-card p {
+  margin: 0 14px 14px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.pc-state {
+  color: #4b5563;
+  margin: 10px 0;
+}
+
+.pc-error {
+  color: #dc2626;
+}
+
+.pc-btn {
+  border: 0;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.pc-btn:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 768px) {
+  .pc-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .pc-hero img {
+    height: 180px;
+  }
+}
