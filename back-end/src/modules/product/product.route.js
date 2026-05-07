@@ -1,7 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { create, getList, update, deleteProduct } = require("./product.ctrl");
+const {
+  create,
+  getList,
+  getWebList,
+  update,
+  deleteProduct,
+} = require("./product.ctrl");
 const authMiddleware = require("../../middleware/authMiddleware");
+
+router.get("/web", getWebList);
 
 router.use(authMiddleware);
 

@@ -3,14 +3,16 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiUrl } from "../helper/const";
 import "./ProductCategory.css";
 
-const FALLBACK_IMAGE = "https://via.placeholder.com/500x300?text=No+Image";
+const FALLBACK_IMAGE = "";
 
 const ProductCategory = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [productsLoading, setProductsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -19,7 +21,7 @@ const ProductCategory = () => {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`${apiUrl}api/categories/web`);
+        const response = await fetch(`/api/categories/web`);
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
         }
@@ -54,11 +56,6 @@ const ProductCategory = () => {
     [categoryMap, categoryId],
   );
 
-  const topLevelCategories = useMemo(
-    () => visibleCategories.filter((category) => category.parent_id === null),
-    [visibleCategories],
-  );
-
   const childCategories = useMemo(
     () =>
       visibleCategories.filter(
@@ -84,6 +81,34 @@ const ProductCategory = () => {
 
     return path;
   }, [currentCategory, categoryMap]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setProductsLoading(true);
+        const response = await fetch(
+          `${apiUrl}api/products/web?category_id=${categoryId}`,
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await response.json();
+        console.log("Fetched products:", data);
+        setProducts(Array.isArray(data?.data) ? data.data : []);
+      } catch (err) {
+        setProducts([]);
+        console.error("Error fetching products:", err);
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    if (categoryId) {
+      fetchProducts();
+    }
+  }, [categoryId]);
 
   if (loading) {
     return (
@@ -146,7 +171,7 @@ const ProductCategory = () => {
           ))}
         </nav>
 
-        <div className="pc-hero">
+        {/* <div className="pc-hero">
           <img
             src={currentCategory.image_url || FALLBACK_IMAGE}
             alt={currentCategory.name}
@@ -158,39 +183,82 @@ const ProductCategory = () => {
             <h1>{currentCategory.name}</h1>
             <p>{currentCategory.description || "N/A"}</p>
           </div>
-        </div>
+        </div> */}
 
         <section>
           <h2>Sub Categories</h2>
           {childCategories.length === 0 ? (
             <p className="pc-state">No sub categories in this category.</p>
           ) : (
-            <div className="pc-grid">
+            <div className="flex flex-wrap gap-4">
               {childCategories.map((category) => (
-                <button
+                <div
                   key={category.id}
-                  type="button"
-                  className="pc-card"
-                  onClick={() => navigate(`/category/${category.id}`)}
+                  className="flex-1"
+                  style={{ maxWidth: 90 }}
                 >
-                  <img
-                    src={category.image_url || FALLBACK_IMAGE}
-                    alt={category.name}
-                    onError={(e) => {
-                      e.target.src = FALLBACK_IMAGE;
-                    }}
-                  />
-                  <div>
-                    <h3>{category.name}</h3>
-                    <p>{category.description || "N/A"}</p>
+                  <div
+                    className="pc-card"
+                    onClick={() => navigate(`/category/${category.id}`)}
+                    style={{ width: "100%" }}
+                  >
+                    <img
+                      src={category.image_url || FALLBACK_IMAGE}
+                      alt={category.name}
+                      onError={(e) => {
+                        e.target.src = FALLBACK_IMAGE;
+                      }}
+                      style={{
+                        maxHeight: 90,
+                        maxWidth: 90,
+                        objectFit: "contain",
+                      }}
+                    />
+                    <div>
+                      <h3 style={{ marginTop: 0 }}>{category.name}</h3>
+                      {/* <p>{category.description || ""}</p> */}
+                    </div>
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           )}
         </section>
 
         <section>
+          <h2>Products</h2>
+          {productsLoading ? (
+            <p className="pc-state">Loading products...</p>
+          ) : products.length === 0 ? (
+            <p className="pc-state">No products in this category.</p>
+          ) : (
+            <div className="pc-grid">
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  className="pc-card"
+                  style={{ cursor: "default" }}
+                >
+                  <img
+                    style={{ width: 120, height: 120, objectFit: "contain" }}
+                    src={product.image_url || FALLBACK_IMAGE}
+                    alt={product.name}
+                    onError={(e) => {
+                      e.target.src = FALLBACK_IMAGE;
+                    }}
+                  />
+                  <div>
+                    <h3>{product.name}</h3>
+                    <p>{product.category_name || ""}</p>
+                    <p>Price: ${Number(product.price || 0).toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* <section>
           <h2>Top Level Categories</h2>
           <div className="pc-grid">
             {topLevelCategories.map((category) => (
@@ -218,7 +286,7 @@ const ProductCategory = () => {
               </button>
             ))}
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );

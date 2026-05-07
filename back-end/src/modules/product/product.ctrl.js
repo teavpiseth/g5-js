@@ -11,6 +11,7 @@ const {
 const {
   createModal,
   list,
+  listWeb,
   updateModal,
   deleteModal,
 } = require("./product.model");
@@ -18,6 +19,26 @@ const {
 const getList = async (req, res, next) => {
   try {
     const result = await list();
+    return resSuccess(res, result, "Products retrieved successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getWebList = async (req, res, next) => {
+  try {
+    const { category_id } = req.query;
+
+    if (!category_id) {
+      return resError(res, "category_id is required", 400);
+    }
+
+    const categoryId = Number(category_id);
+    if (!Number.isInteger(categoryId) || categoryId <= 0) {
+      return resError(res, "category_id must be a positive integer", 400);
+    }
+
+    const result = await listWeb(categoryId);
     return resSuccess(res, result, "Products retrieved successfully");
   } catch (error) {
     next(error);
@@ -116,6 +137,7 @@ const deleteProduct = async (req, res, next) => {
 
 module.exports = {
   getList,
+  getWebList,
   create,
   update,
   deleteProduct,
