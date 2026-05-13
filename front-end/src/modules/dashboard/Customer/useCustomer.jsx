@@ -1,10 +1,9 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import { apiUrl } from "../../../helper/const";
 import HttpRequest from "../../../service/HttpRequest";
 
-const CUSTOMER_API_URL = `${apiUrl}api/customers`;
+const CUSTOMER_API_URL = `/api/customers`;
 
 function useCustomer() {
   const [customers, setCustomers] = useState([]);

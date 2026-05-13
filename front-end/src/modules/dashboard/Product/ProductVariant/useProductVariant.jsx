@@ -1,11 +1,9 @@
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import { apiUrl } from "../../../../helper/const";
 import HttpRequest from "../../../../service/HttpRequest";
 
-const variantApiUrl = (productId) =>
-  `${apiUrl}api/products/${productId}/variants`;
+const variantApiUrl = (productId) => `/api/products/${productId}/variants`;
 
 function useProductVariant(productId) {
   const [variants, setVariants] = useState([]);

@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   create,
   getList,
+  getWebDetail,
   getWebList,
   update,
   deleteProduct,
@@ -10,6 +11,7 @@ const {
 const authMiddleware = require("../../middleware/authMiddleware");
 
 router.get("/web", getWebList);
+router.get("/web/:id", getWebDetail);
 
 router.use(authMiddleware);
 

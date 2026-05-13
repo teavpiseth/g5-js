@@ -5,6 +5,7 @@ import StateAsSnapshot from "./lesson/interactivity/StateAsSnapshot";
 import { BrowserRouter } from "react-router-dom";
 import Homepage from "./components/Homepage";
 import ProductCategory from "./components/ProductCategory";
+import ProductDetail from "./components/ProductDetail";
 import QNA from "./components/QNA";
 import TodoList from "./components/TodoList";
 import TodoListApi from "./components/TodoListApi";
@@ -65,6 +66,7 @@ function App() {
             <Route path="customer" element={<Customer />} />
           </Route>
           <Route path="/category/:categoryId" element={<ProductCategory />} />
+          <Route path="/product/:productId" element={<ProductDetail />} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
       </BrowserRouter>

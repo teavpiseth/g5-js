@@ -8,7 +8,6 @@ import {
   TreeSelect,
 } from "antd";
 import { useEffect, useState } from "react";
-import { apiUrl } from "../../../../helper/const";
 import HttpRequest from "../../../../service/HttpRequest";
 
 function ModalAdd({
@@ -92,7 +91,7 @@ function ModalAdd({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const category = await HttpRequest.get(`${apiUrl}api/categories`);
+        const category = await HttpRequest.get(`/api/categories`);
         if (category?.success) {
           setCategory(category.data || []);
         }

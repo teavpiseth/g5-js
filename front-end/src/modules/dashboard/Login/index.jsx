@@ -2,7 +2,6 @@ import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiUrl } from "../../../helper/const";
 import HttpRequest from "../../../service/HttpRequest";
 import { setDashboardAuth } from "../auth";
 import "./login.css";
@@ -17,10 +16,7 @@ function DashboardLogin() {
     setLoading(true);
 
     try {
-      const response = await HttpRequest.post(
-        `${apiUrl}api/auth/login`,
-        values,
-      );
+      const response = await HttpRequest.post(`/api/auth/login`, values);
       setDashboardAuth(response.data);
       message.success("Login successful");
       // navigate("/dashboard/category", { replace: true });

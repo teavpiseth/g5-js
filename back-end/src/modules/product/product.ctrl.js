@@ -10,6 +10,7 @@ const {
 } = require("./product.validation");
 const {
   createModal,
+  detailWeb,
   list,
   listWeb,
   updateModal,
@@ -40,6 +41,27 @@ const getWebList = async (req, res, next) => {
 
     const result = await listWeb(categoryId);
     return resSuccess(res, result, "Products retrieved successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getWebDetail = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const productId = Number(id);
+    if (!Number.isInteger(productId) || productId <= 0) {
+      return resError(res, "Product id must be a positive integer", 400);
+    }
+
+    const result = await detailWeb(productId);
+
+    if (!result) {
+      return resError(res, "Product not found", 404);
+    }
+
+    return resSuccess(res, result, "Product retrieved successfully");
   } catch (error) {
     next(error);
   }
@@ -138,6 +160,7 @@ const deleteProduct = async (req, res, next) => {
 module.exports = {
   getList,
   getWebList,
+  getWebDetail,
   create,
   update,
   deleteProduct,

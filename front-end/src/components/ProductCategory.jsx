@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { apiUrl } from "../helper/const";
 import "./ProductCategory.css";
 
 const FALLBACK_IMAGE = "";
@@ -87,7 +86,7 @@ const ProductCategory = () => {
       try {
         setProductsLoading(true);
         const response = await fetch(
-          `${apiUrl}api/products/web?category_id=${categoryId}`,
+          `/api/products/web?category_id=${categoryId}`,
         );
 
         if (!response.ok) {
@@ -215,7 +214,9 @@ const ProductCategory = () => {
                       }}
                     />
                     <div>
-                      <h3 style={{ marginTop: 0 }}>{category.name}</h3>
+                      <h3 style={{ marginTop: 0, wordBreak: "break-word" }}>
+                        {category.name}
+                      </h3>
                       {/* <p>{category.description || ""}</p> */}
                     </div>
                   </div>
@@ -237,7 +238,8 @@ const ProductCategory = () => {
                 <div
                   key={product.id}
                   className="pc-card"
-                  style={{ cursor: "default" }}
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  style={{ cursor: "pointer" }}
                 >
                   <img
                     style={{ width: 120, height: 120, objectFit: "contain" }}

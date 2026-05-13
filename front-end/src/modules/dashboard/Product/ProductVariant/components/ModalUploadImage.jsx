@@ -21,7 +21,7 @@ function ModalUploadImage({
     if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
     if (!apiUrl) return imageUrl;
 
-    const base = apiUrl.endsWith("/") ? apiUrl : `${apiUrl}/`;
+    const base = apiUrl.endsWith("/") ? apiUrl : `//`;
     const normalizedPath = imageUrl.replace(/^\/+/, "");
     return `${base}${normalizedPath}`;
   };

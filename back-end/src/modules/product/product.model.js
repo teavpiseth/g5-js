@@ -16,8 +16,8 @@ const listWeb = async (categoryId) => {
     const [categoryRows] = await db.pool.execute(
       "SELECT id, parent_id, is_visible FROM categories",
     );
-
     const childrenByParent = new Map();
+
     categoryRows.forEach((category) => {
       const parentKey =
         category.parent_id === null ? "root" : String(category.parent_id);
@@ -77,6 +77,91 @@ const listWeb = async (categoryId) => {
 
     const [rows] = await db.pool.execute(query, allowedCategoryIds);
     return rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const detailWeb = async (productId) => {
+  try {
+    const [productRows] = await db.pool.execute(
+      `
+        SELECT
+          p.*,
+          p.base_price AS price,
+          c.name AS category_name,
+          (
+            SELECT pvi.image_url
+            FROM product_variants pv
+            LEFT JOIN product_variant_images pvi ON pvi.variant_id = pv.id
+            WHERE pv.product_id = p.id
+            ORDER BY pvi.is_primary DESC, pvi.display_order ASC, pvi.id ASC
+            LIMIT 1
+          ) AS image_url
+        FROM products p
+        LEFT JOIN categories c ON c.id = p.category_id
+        WHERE p.id = ? AND p.is_active = 1
+        LIMIT 1
+      `,
+      [productId],
+    );
+
+    if (productRows.length === 0) {
+      return null;
+    }
+
+    const product = productRows[0];
+
+    const [variantRows] = await db.pool.execute(
+      `
+        SELECT
+          pv.*,
+          COALESCE(
+            (
+              SELECT pvi.image_url
+              FROM product_variant_images pvi
+              WHERE pvi.variant_id = pv.id
+              ORDER BY pvi.is_primary DESC, pvi.display_order ASC, pvi.id ASC
+              LIMIT 1
+            ),
+            ?
+          ) AS image_url
+        FROM product_variants pv
+        WHERE pv.product_id = ?
+        ORDER BY pv.id ASC
+      `,
+      [product.image_url || null, productId],
+    );
+
+    const [imageRows] = await db.pool.execute(
+      `
+        SELECT
+          pvi.*,
+          pv.product_id
+        FROM product_variant_images pvi
+        INNER JOIN product_variants pv ON pv.id = pvi.variant_id
+        WHERE pv.product_id = ?
+        ORDER BY pvi.is_primary DESC, pvi.display_order ASC, pvi.id ASC
+      `,
+      [productId],
+    );
+
+    const imagesByVariantId = new Map();
+    imageRows.forEach((image) => {
+      const key = String(image.variant_id);
+      const current = imagesByVariantId.get(key) || [];
+      current.push(image);
+      imagesByVariantId.set(key, current);
+    });
+
+    return {
+      ...product,
+      images: imageRows,
+      variants: variantRows.map((variant) => ({
+        ...variant,
+        images: imagesByVariantId.get(String(variant.id)) || [],
+      })),
+    };
   } catch (error) {
     throw error;
   }
@@ -178,6 +263,7 @@ const deleteModal = async (req, res, next) => {
 module.exports = {
   list,
   listWeb,
+  detailWeb,
   createModal,
   updateModal,
   deleteModal,
