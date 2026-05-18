@@ -24,6 +24,7 @@ function ProductVariant() {
     updateVariant,
     uploadVariantImages,
     getVariantImages,
+    deleteVariantImage,
   } = useProductVariant(productId);
 
   const dataSource = variants.map((v) => ({ key: v.id, ...v }));
@@ -98,6 +99,7 @@ function ProductVariant() {
           variant={model.editData}
           onGetExistingImages={getVariantImages}
           loadingImages={loadingImages}
+          onDeleteImage={deleteVariantImage}
           onCancel={() =>
             setModel((prev) => ({
               ...prev,

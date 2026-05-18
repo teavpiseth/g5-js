@@ -1,5 +1,14 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Form, Image, message, Modal, Spin, Upload } from "antd";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Image,
+  message,
+  Modal,
+  Popconfirm,
+  Spin,
+  Upload,
+} from "antd";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../../../../../helper/const";
 
@@ -11,10 +20,12 @@ function ModalUploadImage({
   variant,
   onGetExistingImages,
   loadingImages,
+  onDeleteImage,
 }) {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
+  const [deletingImageId, setDeletingImageId] = useState(null);
 
   const buildImageUrl = (imageUrl) => {
     if (!imageUrl) return "";
@@ -72,6 +83,29 @@ function ModalUploadImage({
     message.error(result?.message || "Failed to upload variant images");
   };
 
+  const handleDeleteImage = async (imageId) => {
+    if (!variant?.id || !imageId) return;
+
+    setDeletingImageId(imageId);
+    try {
+      const result = await onDeleteImage(variant.id, imageId);
+      if (result?.success) {
+        message.success("Image deleted successfully");
+        // Refresh the image list
+        const refreshResult = await onGetExistingImages(variant.id);
+        if (refreshResult?.success) {
+          setExistingImages(refreshResult.data || []);
+        }
+      } else {
+        message.error(result?.message || "Failed to delete image");
+      }
+    } catch {
+      message.error("Failed to delete image");
+    } finally {
+      setDeletingImageId(null);
+    }
+  };
+
   return (
     <Modal
       title={`Upload Images${variant?.sku ? ` - ${variant.sku}` : ""}`}
@@ -90,14 +124,41 @@ function ModalUploadImage({
           ) : existingImages.length > 0 ? (
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {existingImages.map((image) => (
-                <Image
+                <div
                   key={image.id}
-                  width={84}
-                  height={84}
-                  src={buildImageUrl(image.image_url)}
-                  alt={image.alt_text || `variant-image-${image.id}`}
-                  style={{ objectFit: "cover", borderRadius: 8 }}
-                />
+                  style={{ position: "relative", display: "inline-block" }}
+                >
+                  <Image
+                    width={84}
+                    height={84}
+                    src={buildImageUrl(image.image_url)}
+                    alt={image.alt_text || `variant-image-${image.id}`}
+                    style={{ objectFit: "cover", borderRadius: 8 }}
+                  />
+                  <Popconfirm
+                    title="Delete image"
+                    description="Are you sure you want to delete this image?"
+                    okText="Delete"
+                    cancelText="Cancel"
+                    okButtonProps={{ danger: true }}
+                    onConfirm={() => handleDeleteImage(image.id)}
+                  >
+                    <Button
+                      danger
+                      size="small"
+                      icon={<DeleteOutlined />}
+                      loading={deletingImageId === image.id}
+                      style={{
+                        position: "absolute",
+                        top: 4,
+                        right: 4,
+                        minWidth: 24,
+                        height: 24,
+                        padding: 0,
+                      }}
+                    />
+                  </Popconfirm>
+                </div>
               ))}
             </div>
           ) : (

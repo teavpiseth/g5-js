@@ -1,3 +1,4 @@
+import { Image } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "./ProductDetail.css";
@@ -222,7 +223,19 @@ const ProductDetail = () => {
               {product.variants.map((variant) => (
                 <div key={variant.id} className="pd-variant-card">
                   <div className="pd-variant-header">
-                    <img
+                    <Image.PreviewGroup
+                      items={variant.images.map((img) => ({
+                        src: img.image_url || FALLBACK_IMAGE,
+                        alt: variant.sku || product.name,
+                      }))}
+                    >
+                      <Image
+                        alt="webp image"
+                        width={200}
+                        src={variant.images[0].image_url}
+                      />
+                    </Image.PreviewGroup>
+                    {/* <img
                       src={
                         variant.image_url || product.image_url || FALLBACK_IMAGE
                       }
@@ -230,7 +243,7 @@ const ProductDetail = () => {
                       onError={(e) => {
                         e.target.src = FALLBACK_IMAGE;
                       }}
-                    />
+                    /> */}
                     <div>
                       <h3>{variant.sku || `Variant #${variant.id}`}</h3>
                       <p>${Number(variant.price || 0).toLocaleString()}</p>

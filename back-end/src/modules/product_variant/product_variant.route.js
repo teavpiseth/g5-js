@@ -7,6 +7,7 @@ const {
   deleteVariant,
   uploadImages,
   getImages,
+  deleteImage,
 } = require("./product_variant.ctrl");
 const upload = require("../../middleware/uploadFile");
 const authMiddleware = require("../../middleware/authMiddleware");
@@ -19,5 +20,6 @@ router.put("/:id", update);
 router.delete("/:id", deleteVariant);
 router.get("/:id/images", getImages);
 router.post("/:id/images", upload.array("images", 10), uploadImages); // becareful append name "images" must match with formData key in front-end
+router.delete("/:id/images/:imageId", deleteImage);
 
 module.exports = router;

@@ -286,6 +286,23 @@ function useProductVariant(productId) {
     [productId, fetchVariants],
   );
 
+  const deleteVariantImage = useCallback(
+    async (variantId, imageId) => {
+      try {
+        await HttpRequest.delete(
+          `${variantApiUrl(productId)}/${variantId}/images/${imageId}`,
+        );
+        return { success: true };
+      } catch (err) {
+        return {
+          success: false,
+          message: err.message || "Unable to delete image",
+        };
+      }
+    },
+    [productId],
+  );
+
   return {
     variants,
     loading,
@@ -304,6 +321,7 @@ function useProductVariant(productId) {
     getVariantImages,
     handleDelete,
     deletingId,
+    deleteVariantImage,
   };
 }
 

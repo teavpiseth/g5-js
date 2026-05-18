@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const {
   resError,
   resSuccess,
@@ -137,6 +139,39 @@ const getImages = async (req, res, next) => {
   }
 };
 
+const deleteImage = async (req, res, next) => {
+  try {
+    const { id, imageId } = req.params;
+    const result = await deleteModal.deleteImageModal(imageId, id);
+
+    if (result.notFound) {
+      return notFound(res, "Variant image");
+    }
+
+    if (result.affectedRows === 0) {
+      return notFound(res, "Variant image");
+    }
+
+    // Delete physical file if imageUrl exists
+    if (result.imageUrl) {
+      const filePath = path.join(__dirname, "../../../", result.imageUrl);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error("Failed to delete file:", err);
+        }
+      });
+    }
+
+    return resSuccess(
+      res,
+      { deletedId: parseInt(imageId) },
+      "Variant image deleted successfully",
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getList,
   create,
@@ -144,4 +179,5 @@ module.exports = {
   deleteVariant,
   uploadImages,
   getImages,
+  deleteImage,
 };

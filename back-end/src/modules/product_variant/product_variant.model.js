@@ -90,11 +90,28 @@ const listImages = async (variantId) => {
   return rows;
 };
 
+const deleteImageModal = async (imageId, variantId) => {
+  const [existing] = await db.pool.execute(
+    "SELECT id, image_url FROM product_variant_images WHERE id = ? AND variant_id = ?",
+    [imageId, variantId],
+  );
+  if (existing.length === 0) return { notFound: true };
+
+  const imageUrl = existing[0].image_url;
+
+  const [result] = await db.pool.execute(
+    "DELETE FROM product_variant_images WHERE id = ? AND variant_id = ?",
+    [imageId, variantId],
+  );
+
+  return { ...result, imageUrl };
+};
+
 module.exports = {
   list,
   createModal,
   updateModal,
-  deleteModal,
+  deleteModal: { ...deleteModal, deleteImageModal },
   createImageModal,
   listImages,
 };
