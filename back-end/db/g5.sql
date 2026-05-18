@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 18, 2026 at 11:49 AM
+-- Generation Time: May 18, 2026 at 04:58 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -137,7 +137,8 @@ INSERT INTO `product_variants` (`id`, `product_id`, `size`, `color`, `quantity`,
 (2, 3, '14', 'gray', 2, 1500.00, '02-gray', '2026-04-23 14:55:32', '2026-04-23 14:55:32'),
 (3, 1, 'm', 'red', 2, 30.00, '01-red-m', '2026-04-27 14:11:21', '2026-04-27 14:11:21'),
 (5, 3, '16', 'gray', 2, 2000.00, '01-gray-16', '2026-04-28 14:20:25', '2026-04-28 14:20:25'),
-(6, 4, '14', 'white', 2, 1150.00, NULL, '2026-05-13 14:51:25', '2026-05-13 14:51:25');
+(6, 4, '14', 'white', 2, 1150.00, NULL, '2026-05-13 14:51:25', '2026-05-13 14:51:25'),
+(7, 3, '16', 'black', 2, 1200.00, NULL, '2026-05-18 14:06:38', '2026-05-18 14:06:38');
 
 -- --------------------------------------------------------
 
@@ -166,7 +167,40 @@ INSERT INTO `product_variant_images` (`id`, `variant_id`, `image_url`, `alt_text
 (6, 2, '/uploads/images-1778682767415-192666146.jpg', NULL, 1, 0, '2026-05-13 14:32:47'),
 (7, 3, '/uploads/images-1778683642028-384477260.jpg', NULL, 1, 0, '2026-05-13 14:47:22'),
 (8, 6, '/uploads/images-1778683906017-897339208.jpg', NULL, 1, 0, '2026-05-13 14:51:46'),
-(9, 6, '/uploads/images-1778683948054-958819085.jpg', NULL, 1, 0, '2026-05-13 14:52:28');
+(9, 6, '/uploads/images-1778683948054-958819085.jpg', NULL, 1, 0, '2026-05-13 14:52:28'),
+(10, 7, '/uploads/images-1779113216313-501732086.jpg', NULL, 1, 0, '2026-05-18 14:06:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purchases`
+--
+
+CREATE TABLE `purchases` (
+  `id` bigint(20) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `status` enum('pending','confirmed','shipped','delivered','cancelled') NOT NULL DEFAULT 'pending',
+  `total_amount` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `note` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purchase_items`
+--
+
+CREATE TABLE `purchase_items` (
+  `id` bigint(20) NOT NULL,
+  `purchase_id` bigint(20) NOT NULL,
+  `variant_id` bigint(20) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `unit_price` decimal(10,2) NOT NULL,
+  `subtotal` decimal(12,2) GENERATED ALWAYS AS (`quantity` * `unit_price`) STORED,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -232,6 +266,20 @@ ALTER TABLE `product_variant_images`
   ADD KEY `variant_id` (`variant_id`);
 
 --
+-- Indexes for table `purchases`
+--
+ALTER TABLE `purchases`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purchase_items`
+--
+ALTER TABLE `purchase_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `purchase_id` (`purchase_id`),
+  ADD KEY `variant_id` (`variant_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -263,13 +311,25 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `product_variants`
 --
 ALTER TABLE `product_variants`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `product_variant_images`
 --
 ALTER TABLE `product_variant_images`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `purchases`
+--
+ALTER TABLE `purchases`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `purchase_items`
+--
+ALTER TABLE `purchase_items`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -304,6 +364,13 @@ ALTER TABLE `product_variants`
 --
 ALTER TABLE `product_variant_images`
   ADD CONSTRAINT `product_variant_images_ibfk_1` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `purchase_items`
+--
+ALTER TABLE `purchase_items`
+  ADD CONSTRAINT `purchase_items_ibfk_1` FOREIGN KEY (`purchase_id`) REFERENCES `purchases` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `purchase_items_ibfk_2` FOREIGN KEY (`variant_id`) REFERENCES `product_variants` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

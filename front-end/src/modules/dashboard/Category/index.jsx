@@ -1,5 +1,5 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Alert, Button, Space, Table, Typography } from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Alert, Button, Input, Space, Table, Typography } from "antd";
 import ModalAdd from "./components/ModalAdd";
 import useCategory from "./useCategory";
 
@@ -16,6 +16,10 @@ function Category() {
     setModel,
     createCategory,
     updateCategory,
+    search,
+    setSearch,
+    pagination,
+    handleTableChange,
   } = useCategory();
 
   const dataSource = categories.map((category) => ({
@@ -29,6 +33,14 @@ function Category() {
         <Typography.Title level={3} style={{ margin: 0 }}>
           Category Table
         </Typography.Title>
+        <Input
+          placeholder="Search by name..."
+          prefix={<SearchOutlined />}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          allowClear
+          style={{ maxWidth: 260 }}
+        />
         <Button
           className="bg-primary"
           type="primary"
@@ -55,7 +67,14 @@ function Category() {
         columns={columns}
         dataSource={dataSource}
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{
+          current: pagination.page,
+          pageSize: pagination.pageSize,
+          total: pagination.total,
+          showSizeChanger: true,
+          showTotal: (total) => `Total ${total} items`,
+        }}
+        onChange={handleTableChange}
         scroll={{ x: 900 }}
       />
       {model.add && (

@@ -1,15 +1,23 @@
 const db = require("../../../db/config");
 
-const list = async () => {
+const list = async ({ search = "", page = 1, limit = 10 } = {}) => {
   try {
+    const offset = (page - 1) * limit;
+    const searchParam = `%${search}%`;
+
     const [rows] = await db.pool.execute(
-      "SELECT * FROM categories ORDER BY id  desc",
+      "SELECT * FROM categories WHERE name LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?",
+      [searchParam, limit, offset],
     );
-    return rows;
+
+    const [[{ total }]] = await db.pool.execute(
+      "SELECT COUNT(*) AS total FROM categories WHERE name LIKE ?",
+      [searchParam],
+    );
+
+    return { rows, total };
   } catch (error) {
     throw error;
-    // console.log("Error fetching categories:", error);
-    // // next(error);
   }
 };
 

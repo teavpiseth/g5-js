@@ -14,10 +14,18 @@ const { createModal, updateModal, deleteModal } = require("./category.model");
 
 const getList = async (req, res, next) => {
   try {
-    const result = await list();
+    const { search = "", page = 1, limit = 100 } = req.query;
+    const result = await list({
+      search,
+      page: parseInt(page),
+      limit: parseInt(limit),
+    });
     res.json({
       success: true,
-      data: result,
+      data: result.rows,
+      total: result.total,
+      page: parseInt(page),
+      limit: parseInt(limit),
       message: "Categories retrieved successfully",
     });
   } catch (error) {

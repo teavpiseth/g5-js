@@ -216,6 +216,102 @@
   color: #dc2626;
 }
 
+/* Variant Color Selector Styles */
+.pd-variants-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pd-variants-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 14px 0;
+}
+
+.pd-color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pd-color-swatch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+}
+
+.pd-color-swatch:hover {
+  border-color: #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+  transform: translateY(-2px);
+}
+
+.pd-color-swatch.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.pd-color-indicator {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow:
+    0 0 0 1px #d1d5db,
+    0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.pd-variant-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.pd-variant-color {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.9rem;
+}
+
+.pd-variant-size {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.pd-selected-variant-info {
+  padding: 14px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.pd-selected-variant-info p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.pd-selected-variant-info p:first-child {
+  margin-top: 0;
+}
+
+.pd-selected-variant-info p:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
   .pd-hero {
     grid-template-columns: 1fr;
@@ -228,5 +324,19 @@
 
   .pd-section {
     padding: 18px;
+  }
+
+  .pd-color-swatches {
+    gap: 8px;
+  }
+
+  .pd-color-swatch {
+    min-width: 120px;
+    padding: 8px 10px;
+  }
+
+  .pd-color-indicator {
+    width: 28px;
+    height: 28px;
   }
 }

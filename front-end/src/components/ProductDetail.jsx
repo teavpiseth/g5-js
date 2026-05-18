@@ -1,4 +1,3 @@
-import { Image } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "./ProductDetail.css";
@@ -12,6 +11,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -47,6 +47,19 @@ const ProductDetail = () => {
   const galleryImages = useMemo(() => {
     if (!product) return [];
 
+    // If a variant is selected, show only that variant's images
+    if (selectedVariant && selectedVariant.images?.length > 0) {
+      return selectedVariant.images.map((image, index) => ({
+        id: `variant-${selectedVariant.id}-${index}`,
+        image_url: image.image_url,
+        alt_text:
+          image.alt_text ||
+          `${selectedVariant.color || ""} ${selectedVariant.size || ""}`.trim() ||
+          product.name,
+      }));
+    }
+
+    // Otherwise, show the default product images
     const orderedImages = [];
 
     if (product.image_url) {
@@ -64,7 +77,7 @@ const ProductDetail = () => {
     });
 
     return orderedImages;
-  }, [product]);
+  }, [product, selectedVariant]);
 
   useEffect(() => {
     setSelectedImage(galleryImages[0]?.image_url || "");
@@ -192,6 +205,61 @@ const ProductDetail = () => {
                 {Number(product.is_active) === 1 ? "Available" : "Unavailable"}
               </span>
             </div>
+
+            {product.variants?.length > 0 && (
+              <div className="pd-variants-section">
+                <h3 className="pd-variants-title">Available Colors</h3>
+                <div className="pd-color-swatches">
+                  {product.variants.map((variant) => (
+                    <button
+                      key={variant.id}
+                      type="button"
+                      className={`pd-color-swatch ${selectedVariant?.id === variant.id ? "active" : ""}`}
+                      onClick={() => {
+                        setSelectedVariant(variant);
+                        if (variant.images && variant.images.length > 0) {
+                          setSelectedImage(variant.images[0].image_url);
+                        }
+                      }}
+                      title={`${variant.color || "Color"} - ${variant.size || "Size"} - $${Number(variant.price || 0).toLocaleString()}`}
+                    >
+                      <span
+                        className="pd-color-indicator"
+                        style={{
+                          backgroundColor:
+                            variant.color?.toLowerCase() || "#ccc",
+                        }}
+                      ></span>
+                      <span className="pd-variant-info">
+                        <span className="pd-variant-color">
+                          {variant.color || "N/A"}
+                        </span>
+                        <span className="pd-variant-size">
+                          {variant.size ? `Size: ${variant.size}` : ""}
+                        </span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {selectedVariant && (
+                  <div className="pd-selected-variant-info">
+                    <p>
+                      <strong>Selected:</strong>{" "}
+                      {selectedVariant.sku || `Variant #${selectedVariant.id}`}
+                    </p>
+                    <p>
+                      <strong>Price:</strong> $
+                      {Number(selectedVariant.price || 0).toLocaleString()}
+                    </p>
+                    <p>
+                      <strong>In Stock:</strong> {selectedVariant.quantity ?? 0}{" "}
+                      units
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
             <p className="pd-description">
               {product.description || "No description available."}
             </p>
@@ -214,52 +282,6 @@ const ProductDetail = () => {
               </button>
             </div>
           </div>
-        </section>
-
-        <section className="pd-section">
-          <h2>Variants</h2>
-          {product.variants?.length ? (
-            <div className="pd-variant-grid">
-              {product.variants.map((variant) => (
-                <div key={variant.id} className="pd-variant-card">
-                  <div className="pd-variant-header">
-                    <Image.PreviewGroup
-                      items={variant.images.map((img) => ({
-                        src: img.image_url || FALLBACK_IMAGE,
-                        alt: variant.sku || product.name,
-                      }))}
-                    >
-                      <Image
-                        alt="webp image"
-                        width={200}
-                        src={variant.images[0].image_url}
-                      />
-                    </Image.PreviewGroup>
-                    {/* <img
-                      src={
-                        variant.image_url || product.image_url || FALLBACK_IMAGE
-                      }
-                      alt={variant.sku || product.name}
-                      onError={(e) => {
-                        e.target.src = FALLBACK_IMAGE;
-                      }}
-                    /> */}
-                    <div>
-                      <h3>{variant.sku || `Variant #${variant.id}`}</h3>
-                      <p>${Number(variant.price || 0).toLocaleString()}</p>
-                    </div>
-                  </div>
-                  <div className="pd-variant-meta">
-                    <span>Color: {variant.color || "-"}</span>
-                    <span>Size: {variant.size || "-"}</span>
-                    <span>Stock: {variant.quantity ?? 0}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="pd-state">No variants available for this product.</p>
-          )}
         </section>
       </div>
     </div>

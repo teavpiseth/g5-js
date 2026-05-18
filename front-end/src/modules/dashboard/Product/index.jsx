@@ -26,7 +26,7 @@ function Product() {
         columns={columns}
         dataSource={productList}
         loading={loading}
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 2 }}
         scroll={{ x: 900 }}
       />
       {model.add && (

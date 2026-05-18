@@ -233,23 +233,25 @@ const ProductCategory = () => {
           ) : products.length === 0 ? (
             <p className="pc-state">No products in this category.</p>
           ) : (
-            <div className="pc-grid">
+            <div className="pc-grid pc-product-grid">
               {products.map((product) => (
                 <div
                   key={product.id}
-                  className="pc-card"
+                  className="pc-card pc-product-card"
                   onClick={() => navigate(`/product/${product.id}`)}
                   style={{ cursor: "pointer" }}
                 >
-                  <img
-                    style={{ width: 120, height: 120, objectFit: "contain" }}
-                    src={product.image_url || FALLBACK_IMAGE}
-                    alt={product.name}
-                    onError={(e) => {
-                      e.target.src = FALLBACK_IMAGE;
-                    }}
-                  />
-                  <div>
+                  <div className="pc-product-image-wrap">
+                    <img
+                      className="pc-product-image"
+                      src={product.image_url || FALLBACK_IMAGE}
+                      alt={product.name}
+                      onError={(e) => {
+                        e.target.src = FALLBACK_IMAGE;
+                      }}
+                    />
+                  </div>
+                  <div className="pc-product-content">
                     <h3>{product.name}</h3>
                     <p>{product.category_name || ""}</p>
                     <p>Price: ${Number(product.price || 0).toLocaleString()}</p>

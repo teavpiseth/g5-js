@@ -1,3 +1,4 @@
+import { Card } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Homepage.css";
@@ -145,29 +146,33 @@ const Homepage = () => {
           {!loading && !error && (
             <div className="categories-grid">
               {topLevelCategories.map((category) => (
-                <div
-                  onClick={() => navigate(`/category/${category.id}`)}
+                <Card
                   key={category.id}
-                  className="category-card"
+                  hoverable
+                  className="category-card-small"
+                  onClick={() => navigate(`/category/${category.id}`)}
+                  cover={
+                    <div className="category-image-small">
+                      <img
+                        src={category.image_url}
+                        alt={category.name}
+                        onError={(e) => {
+                          e.target.src =
+                            "https://via.placeholder.com/300x200?text=No+Image";
+                        }}
+                      />
+                    </div>
+                  }
                 >
-                  <div className="category-image">
-                    <img
-                      src={category.image_url}
-                      alt={category.name}
-                      onError={(e) => {
-                        e.target.src =
-                          "https://via.placeholder.com/300x200?text=No+Image";
-                      }}
-                    />
-                  </div>
-                  <div className="category-info">
-                    <h3>{category.name}</h3>
-                    <p>{category.description}</p>
-                    <button className="category-btn">
-                      Explore {category.name}
-                    </button>
-                  </div>
-                </div>
+                  <Card.Meta
+                    title={category.name}
+                    description={
+                      <div className="category-description-small">
+                        <p>{category.description}</p>
+                      </div>
+                    }
+                  />
+                </Card>
               ))}
             </div>
           )}
